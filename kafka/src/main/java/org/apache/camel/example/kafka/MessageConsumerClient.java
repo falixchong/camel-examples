@@ -52,16 +52,40 @@ public final class MessageConsumerClient {
         }
     }
 
+    // static RouteBuilder createRouteBuilder() {
+    //     return new RouteBuilder() {
+    //         public void configure() {
+    //         from("kafka:{{consumer.topic}}"
+    //                 + "?maxPollRecords={{consumer.maxPollRecords}}"
+    //                 + "&consumersCount={{consumer.consumersCount}}"
+    //                 + "&seekTo={{consumer.seekTo}}"
+    //                 + "&groupId={{consumer.group}}")
+    //                 .routeId("FromKafka")
+    //                 .log("${body}");
+                    
+    //         }
+    //     };
+    // }
+
+    static String saslJaasConfig = "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{consumer.scamUsername}}\" password=\"{{consumer.scamPassword}}\";";
+
     static RouteBuilder createRouteBuilder() {
         return new RouteBuilder() {
             public void configure() {
-            from("kafka:{{consumer.topic}}"
-                    + "?maxPollRecords={{consumer.maxPollRecords}}"
-                    + "&consumersCount={{consumer.consumersCount}}"
-                    + "&seekTo={{consumer.seekTo}}"
-                    + "&groupId={{consumer.group}}")
-                    .routeId("FromKafka")
-                    .log("${body}");
+            from("kafka:{{consumer.topic}}?"
+                + "brokers={{kafka.brokers}}"
+                + "&saslMechanism={{consumer.saslMechanism}}"  
+                + "&securityProtocol={{consumer.securityProtocol}}"
+                + "&sslEndpointAlgorithm={{consumer.sslEndpointAlgorithm}}"
+                + "&saslJaasConfig=" + saslJaasConfig
+                + "&sslEnabledProtocols={{consumer.sslEnabledProtocols}}"
+                + "&sslTruststoreType={{consumer.sslTruststoreType}}"
+                + "&sslTruststoreLocation={{consumer.sslTruststoreLocation}}"
+                + "&sslTruststorePassword={{consumer.sslTruststorePassword}}"
+                + "&clientId={{consumer.clientId}}"
+                + "&groupId={{consumer.groupId}}")
+                .routeId("FromKafka")
+                .log("${body}");   
             }
         };
     }

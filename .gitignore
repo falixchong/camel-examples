@@ -25,3 +25,5 @@ components/camel-cxf/activemq-data
 *.swp
 .flattened-pom.xml
 .java-version
+kafka/src/main/resources/truststore.p12
+kafka/src/main/resources/application.properties
